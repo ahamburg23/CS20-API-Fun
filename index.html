@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+	<title>Light | D&D 5e</title>
+	<meta charset="utf-8"/>
+	<script>
+		function getWeather() {
+			/* Step 1: Make instance of request object...
+			...to make HTTP request after page is loaded*/
+			request = new XMLHttpRequest();
+			console.log("1 - request object created");
+ 
+			// Step 2: Set the URL for the AJAX request to be the JSON file
+		request.open("GET", "https://www.dnd5eapi.co/api/spells/light", true)
+
+			console.log("2 - opened request file");
+ 
+			// Step 3: set up event handler/callback
+
+			request.onreadystatechange = function() {
+				console.log("3 - readystatechange event fired.");
+ 
+				if (request.readyState == 4 && request.status == 200) {
+
+					// Step 5: wait for done + success
+					console.log("5 - response received");
+					result = request.responseText;
+					spell = JSON.parse(result);
+					
+					document.getElementById("name").innerHTML ="Spell Name: " + spell["name"];
+                    document.getElementById("desc").innerHTML ="Description: " + spell["desc"];
+                    document.getElementById("range").innerHTML ="Range: " + spell["range"];
+
+                    document.getElementById("data").innerHTML = result;
+					
+				}
+				else if (request.readyState == 4 && request.status != 200) {
+
+					document.getElementById("data").innerHTML = "Something is wrong! Check the logs to see where this went off the rails";
+
+				}
+
+				else if (request.readyState == 3) {
+
+					document.getElementById("data").innerHTML = "Too soon! Try again";
+
+				}
+
+			}
+		// Step 4: fire off the HTTP request
+			request.send();
+			console.log("4 - Request sent");
+		}
+	</script>
+</head>
+
+
+<body onload="getWeather()">
+
+    <div>The API I selected is for Dungeons and Dragons 5th Edition, and holds
+         descriptions for lots of things from the game.</div>
+    <div>I found this from https://github.com/public-apis/public-apis, although
+         I knew it exisited from other places.</div>
+    <div>I used the asynchronous option for open, since I thought it was more
+         important to display something on the page immediately rather than
+         waiting for the api request to display anything. Otherwise, I just
+         checked that the request was finished and that the response code was
+         200 to ensure that it was properly accessed.</div>
+    <div>I use an app that lets you make a spell list for your character and
+         lets you search for spell descriptions so you don't have to search
+         through the 300 page rule book to find the range of a spell or something
+         like that. A second use might be to make a searchable list of magic items
+         like https://donjon.bin.sh/5e/magic_items/ does. In general, this helps
+         to take things that are spread out through lots of books and pages and
+         make them searchable.</div>
+	<h1>Light | D&D 5e Spell Description</h1>
+	<div id="name">Spell Name: </div>
+    <div id="desc">Description: </div>
+    <div id="range">Range: </div>
+    <br />
+    <div id="data">Loading... </div>
+</body>
+</html>
